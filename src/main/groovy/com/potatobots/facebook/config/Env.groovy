@@ -10,12 +10,20 @@ class Env {
         Integer.parseInt(port)
     }
 
-    static address() {
-        System.getenv().ADDRESS ?: 'localhost'
+    static host() {
+        System.getenv().HOST ?: 'localhost'
     }
 
     /**
-     * App
+     * App configuration
+     */
+    static poolingInterval() {
+        def interval = System.getenv().POOLING_INTERVAL ?: '300000'
+        Long.parseLong(interval)
+    }
+
+    /**
+     * Integration
      */
     static facebookAppId() {
         System.getenv().FACEBOOK_APP_ID ?: 'facebook.app.id'
@@ -24,7 +32,6 @@ class Env {
     static facebookAppSecret() {
         System.getenv().FACEBOOK_APP_SECRET ?: 'facebook.app.secret'
     }
-
 
     /**
      * Tests

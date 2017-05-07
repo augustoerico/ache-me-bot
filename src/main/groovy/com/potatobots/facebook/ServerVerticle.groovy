@@ -1,14 +1,19 @@
 package com.potatobots.facebook
 
 import com.potatobots.facebook.config.Env
+import com.potatobots.facebook.pooling.handlers.PoolingHandler
 import com.potatobots.facebook.routes.HealthRouter
 import io.vertx.core.AbstractVerticle
+import io.vertx.core.AsyncResult
 import io.vertx.core.Future
 import io.vertx.core.http.HttpMethod
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.CorsHandler
+import org.apache.logging.log4j.LogManager
 
 class ServerVerticle extends AbstractVerticle {
+
+    static final LOGGER = LogManager.getLogger ServerVerticle
 
     @Override
     void start(Future future) {
@@ -25,18 +30,20 @@ class ServerVerticle extends AbstractVerticle {
         HealthRouter.create(router).route()
         // Your app routes go here!
 
+        vertx.setPeriodic(Env.poolingInterval(), PoolingHandler.handle)
+
         vertx.createHttpServer()
                 .requestHandler(router.&accept)
-                .listen(Env.port(), Env.address(), handleResult.curry(future))
+                .listen(Env.port(), Env.host(), handleResult.curry(future))
     }
 
-    def handleResult = { Future future, result ->
+    def handleResult = { Future future, AsyncResult result ->
         if (result.succeeded()) {
-            println "Server running on http://${Env.address()}:${Env.port()}"
+            LOGGER.info "Server running on http://${Env.host()}:${Env.port()}"
             future.complete()
         } else {
             def ex = result.cause()
-            ex.printStackTrace()
+            LOGGER.error('', ex)
             future.fail(ex)
         }
     }

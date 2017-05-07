@@ -3,6 +3,7 @@ package com.potatobots.facebook
 import com.potatobots.facebook.config.Env
 import com.potatobots.facebook.pooling.handlers.PoolingHandler
 import com.potatobots.facebook.routes.HealthRouter
+import com.potatobots.facebook.verticles.PoolingVerticle
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.AsyncResult
 import io.vertx.core.Future
@@ -30,7 +31,11 @@ class ServerVerticle extends AbstractVerticle {
         HealthRouter.create(router).route()
         // Your app routes go here!
 
-        vertx.setPeriodic(Env.poolingInterval(), PoolingHandler.handle)
+//        vertx.setPeriodic(Env.poolingInterval(), PoolingHandler.handle)
+
+        vertx.deployVerticle(PoolingVerticle.name) {
+
+        }
 
         vertx.createHttpServer()
                 .requestHandler(router.&accept)

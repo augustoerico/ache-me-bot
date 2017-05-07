@@ -24,10 +24,6 @@ dependencies {
     compile('io.vertx:vertx-web:3.4.1') {
         exclude group: 'io.vertx', module: 'vertx-core'
     }
-    compile('io.vertx:vertx-rx-java:3.4.1') {
-        exclude group: 'io.vertx', module: 'vertx-core'
-    }
-
 
     /**
      * Tests

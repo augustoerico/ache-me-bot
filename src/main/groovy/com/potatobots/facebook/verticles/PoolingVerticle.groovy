@@ -5,6 +5,8 @@ import com.potatobots.facebook.pooling.handlers.PoolingHandler
 import groovy.json.JsonSlurper
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.Future
+import io.vertx.core.Handler
+import io.vertx.core.buffer.Buffer
 import io.vertx.core.http.HttpClient
 import io.vertx.core.http.RequestOptions
 import org.apache.logging.log4j.LogManager
@@ -29,13 +31,27 @@ class PoolingVerticle extends AbstractVerticle {
         ])
 
         httpClient.getNow(options) { response ->
-            response.bodyHandler { bodyJson ->
-                def body = new JsonSlurper().parseText(bodyJson.toString())
-                LOGGER.info "$body"
-            }
+            response.bodyHandler(bodyHandler.curry(future))
         }
 
-        vertx.setPeriodic(Env.poolingInterval(), PoolingHandler.handle)
+        LOGGER.info 'Done'
+        future.complete()
+    }
+
+    def bodyHandler = { Future future, Buffer buffer ->
+        def body = new JsonSlurper().parseText(buffer.toString())
+
+        if (body.access_token) {
+            LOGGER.info 'Got Facebook access token'
+            vertx.setPeriodic(Env.poolingInterval(), PoolingHandler.handle.curry(body.access_token) as Handler)
+        } else if (body.error) {
+            def ex = new RuntimeException(body.error as String)
+            LOGGER.error 'Error while getting Facebook access token', ex
+            future.fail ex
+        } else {
+            def ex = new RuntimeException('Unknown error while getting Facebook access token')
+            future.fail ex
+        }
     }
 
 }

@@ -6,9 +6,8 @@ class PoolingHandler {
 
     static final LOGGER = LogManager.getLogger PoolingHandler
 
-    static handle = {
+    static handle = { String accessToken ->
         LOGGER.info 'Handling interval call'
-
     }
 
 }

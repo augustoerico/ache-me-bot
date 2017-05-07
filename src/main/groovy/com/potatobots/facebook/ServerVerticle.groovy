@@ -18,6 +18,8 @@ class ServerVerticle extends AbstractVerticle {
 
     @Override
     void start(Future future) {
+        LOGGER.info 'Starting verticle'
+
         Router router = Router.router(vertx)
 
         def cors = CorsHandler.create('*')
@@ -31,11 +33,7 @@ class ServerVerticle extends AbstractVerticle {
         HealthRouter.create(router).route()
         // Your app routes go here!
 
-//        vertx.setPeriodic(Env.poolingInterval(), PoolingHandler.handle)
-
-        vertx.deployVerticle(PoolingVerticle.name) {
-
-        }
+        vertx.deployVerticle(PoolingVerticle.name)
 
         vertx.createHttpServer()
                 .requestHandler(router.&accept)
@@ -44,11 +42,12 @@ class ServerVerticle extends AbstractVerticle {
 
     def handleResult = { Future future, AsyncResult result ->
         if (result.succeeded()) {
+            LOGGER.info 'Done'
             LOGGER.info "Server running on http://${Env.host()}:${Env.port()}"
             future.complete()
         } else {
             def ex = result.cause()
-            LOGGER.error('', ex)
+            LOGGER.error(ex.message, ex)
             future.fail(ex)
         }
     }

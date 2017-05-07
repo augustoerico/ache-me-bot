@@ -2,10 +2,13 @@ group 'com.potatobots.facebook'
 version '0.0.1'
 
 apply plugin: 'groovy'
+apply plugin: 'application'
 
 repositories {
     mavenCentral()
 }
+
+mainClassName = 'com.potatobots.facebook.Application'
 
 dependencies {
 

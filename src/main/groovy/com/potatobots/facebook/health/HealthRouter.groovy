@@ -1,6 +1,6 @@
 package com.potatobots.facebook.health
 
-import com.potatobots.facebook.health.handlers.GetHealthHandler
+import com.potatobots.facebook.health.handlers.GetHandler
 import io.vertx.core.http.HttpMethod
 import io.vertx.ext.web.Router
 
@@ -13,7 +13,7 @@ class HealthRouter {
     }
 
     def route() {
-        router.route(HttpMethod.GET, '/health').handler GetHealthHandler.handler
+        router.get('/health').handler GetHandler.handle
     }
 
     static create(Router router) {

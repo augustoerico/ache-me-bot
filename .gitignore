@@ -3,6 +3,7 @@
 
 # Gradle
 build/
+.gradle/
 
 # Misc
 setup-env-vars.sh

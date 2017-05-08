@@ -5,7 +5,6 @@ import com.potatobots.facebook.pooling.handlers.PoolingHandler
 import groovy.json.JsonSlurper
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.Future
-import io.vertx.core.Handler
 import io.vertx.core.buffer.Buffer
 import io.vertx.core.http.HttpClient
 import io.vertx.core.http.RequestOptions
@@ -15,11 +14,13 @@ class PoolingVerticle extends AbstractVerticle {
 
     static final LOGGER = LogManager.getLogger PoolingVerticle
 
+    HttpClient httpClient
+
     @Override
     void start(Future future) {
         LOGGER.info 'Starting verticle'
 
-        HttpClient httpClient = vertx.createHttpClient()
+        httpClient = vertx.createHttpClient()
         RequestOptions options = new RequestOptions([
                 host: 'graph.facebook.com',
                 port: 443,
@@ -33,9 +34,6 @@ class PoolingVerticle extends AbstractVerticle {
         httpClient.getNow(options) { response ->
             response.bodyHandler(bodyHandler.curry(future))
         }
-
-        LOGGER.info 'Done'
-        future.complete()
     }
 
     def bodyHandler = { Future future, Buffer buffer ->
@@ -43,7 +41,10 @@ class PoolingVerticle extends AbstractVerticle {
 
         if (body.access_token) {
             LOGGER.info 'Got Facebook access token'
-            vertx.setPeriodic(Env.poolingInterval(), PoolingHandler.handle.curry(body.access_token) as Handler)
+            vertx.setPeriodic Env.poolingInterval(),
+                    new PoolingHandler(httpClient, body.access_token as String).handle
+            LOGGER.info 'Done'
+            future.complete()
         } else if (body.error) {
             def ex = new RuntimeException(body.error as String)
             LOGGER.error 'Error while getting Facebook access token', ex

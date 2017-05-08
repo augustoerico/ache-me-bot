@@ -22,6 +22,10 @@ class Env {
         Long.parseLong(interval)
     }
 
+    static facebookGroupId() {
+        System.getenv().FACEBOOK_GROUP_ID ?: 'facebook.group.id'
+    }
+
     /**
      * Integration
      */

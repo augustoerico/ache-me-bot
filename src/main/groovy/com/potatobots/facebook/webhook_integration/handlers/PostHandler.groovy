@@ -1,5 +1,6 @@
 package com.potatobots.facebook.webhook_integration.handlers
 
+import com.potatobots.facebook.config.Env
 import io.vertx.ext.web.RoutingContext
 
 class PostHandler {
@@ -7,6 +8,6 @@ class PostHandler {
     static handle = { RoutingContext context ->
         def response = context.response()
         response.putHeader('content-type', 'application/json')
-                .end("{\"status\":\"OK - POST\",\"checkedAt\":\"${new Date()}\"}")
+                .end(Env.facebookWebhookToken())
     }
 }

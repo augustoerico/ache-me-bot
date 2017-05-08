@@ -26,6 +26,10 @@ class Env {
         System.getenv().FACEBOOK_GROUP_ID ?: 'facebook.group.id'
     }
 
+    static facebookWebhookToken() {
+        System.getenv().FACEBOOK_WEBHOOK_TOKEN ?: 'facebook.webhook.token'
+    }
+
     /**
      * Integration
      */

@@ -1,8 +1,7 @@
 package com.potatobots.facebook
 
 import com.potatobots.facebook.config.Env
-import com.potatobots.facebook.pooling.handlers.PoolingHandler
-import com.potatobots.facebook.routes.HealthRouter
+import com.potatobots.facebook.health.HealthRouter
 import com.potatobots.facebook.verticles.PoolingVerticle
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.AsyncResult
@@ -31,7 +30,6 @@ class ServerVerticle extends AbstractVerticle {
         router.route().handler(cors)
 
         HealthRouter.create(router).route()
-        // Your app routes go here!
 
         vertx.deployVerticle(PoolingVerticle.name)
 

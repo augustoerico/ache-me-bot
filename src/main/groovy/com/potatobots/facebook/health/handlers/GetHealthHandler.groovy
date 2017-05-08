@@ -1,4 +1,4 @@
-package com.potatobots.facebook.health
+package com.potatobots.facebook.health.handlers
 
 import io.vertx.ext.web.RoutingContext
 

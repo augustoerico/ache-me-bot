@@ -1,6 +1,6 @@
-package com.potatobots.facebook.routes
+package com.potatobots.facebook.health
 
-import com.potatobots.facebook.health.GetHealthHandler
+import com.potatobots.facebook.health.handlers.GetHealthHandler
 import io.vertx.core.http.HttpMethod
 import io.vertx.ext.web.Router
 

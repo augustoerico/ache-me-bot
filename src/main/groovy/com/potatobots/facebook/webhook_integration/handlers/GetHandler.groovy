@@ -10,6 +10,7 @@ class GetHandler {
     static final Logger LOGGER = LogManager.getLogger GetHandler
 
     static handle = { RoutingContext context ->
+        LOGGER.info "[GET ] ${context.normalisedPath()}"
         def hubChallenge = context.request().getParam('hub.challenge')
         def hubVerifyToken = context.request().getParam('hub.verify_token')
         LOGGER.info "params=($hubChallenge, $hubVerifyToken)"

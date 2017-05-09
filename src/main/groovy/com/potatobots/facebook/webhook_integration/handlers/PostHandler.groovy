@@ -10,6 +10,7 @@ class PostHandler {
     static final Logger LOGGER = LogManager.getLogger PostHandler
 
     static handle = { RoutingContext context ->
+        LOGGER.info "[POST] ${context.normalisedPath()}"
         def body = context.getBodyAsJson().map
         LOGGER.info "body=$body"
         def response = context.response()

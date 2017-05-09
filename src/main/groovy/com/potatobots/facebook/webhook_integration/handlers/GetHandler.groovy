@@ -17,7 +17,7 @@ class GetHandler {
         def response = context.response()
         if (hubVerifyToken == Env.facebookWebhookToken()) {
             response.putHeader('content-type', 'application/json')
-                    .end(Env.facebookWebhookToken())
+                    .end(hubChallenge)
         } else {
             response.putHeader('content-type', 'application/json')
                     .setStatusCode(400)

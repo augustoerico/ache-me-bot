@@ -13,9 +13,9 @@ class PostHandler {
         def body = context.getBodyAsJson().map
         LOGGER.info "body=$body"
         def response = context.response()
-        if (body.hub_verify_token == Env.facebookWebhookToken()) {
+        if (body.'hub.verify_token' == Env.facebookWebhookToken()) {
             response.putHeader('content-type', 'application/json')
-                    .end(body.hub_challenge as String)
+                    .end(body.'hub.challenge' as String)
         } else {
             response.setStatusCode(400).end()
         }

@@ -2,12 +2,22 @@ package com.potatobots.facebook.webhook_integration.handlers
 
 import com.potatobots.facebook.config.Env
 import io.vertx.ext.web.RoutingContext
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
 class PostHandler {
 
+    static final Logger LOGGER = LogManager.getLogger PostHandler
+
     static handle = { RoutingContext context ->
+        def body = context.getBodyAsJson().map
+        LOGGER.info "body=$body"
         def response = context.response()
-        response.putHeader('content-type', 'application/json')
-                .end(Env.facebookWebhookToken())
+        if (body.hub_verify_token == Env.facebookWebhookToken()) {
+            response.putHeader('content-type', 'application/json')
+                    .end(body.hub_challenge as String)
+        } else {
+            response.setStatusCode(400).end()
+        }
     }
 }

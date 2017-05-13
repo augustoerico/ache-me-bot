@@ -2,13 +2,13 @@ package com.potatobots.facebook
 
 import com.potatobots.facebook.config.Env
 import com.potatobots.facebook.health.HealthRouter
-import com.potatobots.facebook.verticles.PoolingVerticle
-import com.potatobots.facebook.webhook_integration.WebhookIntegrationRouter
+import com.potatobots.facebook.webhooks.user.WebhookUserRouter
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.AsyncResult
 import io.vertx.core.Future
 import io.vertx.core.http.HttpMethod
 import io.vertx.ext.web.Router
+import io.vertx.ext.web.handler.BodyHandler
 import io.vertx.ext.web.handler.CorsHandler
 import org.apache.logging.log4j.LogManager
 
@@ -16,11 +16,13 @@ class ServerVerticle extends AbstractVerticle {
 
     static final LOGGER = LogManager.getLogger ServerVerticle
 
+    Router router
+
     @Override
     void start(Future future) {
         LOGGER.info 'Starting verticle'
 
-        Router router = Router.router(vertx)
+        router = Router.router(vertx)
 
         def cors = CorsHandler.create('*')
                 .allowedMethod(HttpMethod.GET)
@@ -30,10 +32,7 @@ class ServerVerticle extends AbstractVerticle {
 
         router.route().handler(cors)
 
-        HealthRouter.create(router).route()
-        WebhookIntegrationRouter.create(router).route()
-
-        vertx.deployVerticle(PoolingVerticle.name)
+        registerAppRoutes()
 
         vertx.createHttpServer()
                 .requestHandler(router.&accept)
@@ -50,6 +49,13 @@ class ServerVerticle extends AbstractVerticle {
             LOGGER.error(ex.message, ex)
             future.fail(ex)
         }
+    }
+
+    def registerAppRoutes() {
+        router.route().handler BodyHandler.create()
+
+        HealthRouter.create(router).route()
+        WebhookUserRouter.create(router).route()
     }
 
 }

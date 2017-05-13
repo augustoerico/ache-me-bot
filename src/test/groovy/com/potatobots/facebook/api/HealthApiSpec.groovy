@@ -1,4 +1,4 @@
-package io.github.augustoerico.api
+package com.potatobots.facebook.api
 
 import com.potatobots.facebook.Application
 import com.potatobots.facebook.config.Env

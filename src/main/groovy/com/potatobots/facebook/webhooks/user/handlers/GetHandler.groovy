@@ -1,23 +1,27 @@
-package com.potatobots.facebook.webhook_integration.handlers
+package com.potatobots.facebook.webhooks.user.handlers
 
 import com.potatobots.facebook.config.Env
 import io.vertx.ext.web.RoutingContext
 import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
 
 class GetHandler {
 
-    static final Logger LOGGER = LogManager.getLogger GetHandler
+    static LOGGER = LogManager.getLogger GetHandler
+
+    static CHALLENGE_KEY = 'hub.challenge'
+    static VERIFY_TOKEN_KEY = 'hub.verify_token'
 
     static handle = { RoutingContext context ->
         LOGGER.info "[GET ] ${context.normalisedPath()}"
-        def hubChallenge = context.request().getParam('hub.challenge')
-        def hubVerifyToken = context.request().getParam('hub.verify_token')
-        LOGGER.info "params=($hubChallenge, $hubVerifyToken)"
+
+        def challenge = context.request().getParam CHALLENGE_KEY
+        def verifyToken = context.request().getParam VERIFY_TOKEN_KEY
+
+        LOGGER.info "params=($challenge, $verifyToken)"
         def response = context.response()
-        if (hubVerifyToken == Env.facebookWebhookToken()) {
+        if (verifyToken == Env.facebookWebhookToken()) {
             response.putHeader('content-type', 'application/json')
-                    .end(hubChallenge)
+                    .end(challenge)
         } else {
             response.putHeader('content-type', 'application/json')
                     .setStatusCode(400)

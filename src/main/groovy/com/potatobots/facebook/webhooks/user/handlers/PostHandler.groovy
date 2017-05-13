@@ -1,4 +1,4 @@
-package com.potatobots.facebook.webhook_integration.handlers
+package com.potatobots.facebook.webhooks.user.handlers
 
 import com.potatobots.facebook.config.Env
 import io.vertx.ext.web.RoutingContext

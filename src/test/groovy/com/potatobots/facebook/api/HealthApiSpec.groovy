@@ -1,43 +1,24 @@
 package com.potatobots.facebook.api
 
-import com.potatobots.facebook.Application
 import com.potatobots.facebook.config.Env
-import io.vertx.core.Vertx
-import io.vertx.core.http.HttpClient
-import spock.lang.Shared
-import spock.lang.Specification
 import spock.util.concurrent.AsyncConditions
 
-class HealthApiSpec extends Specification {
+class HealthApiSpec extends ApiSpec {
 
-    @Shared
-    HttpClient client
+    static final URI = '/health'
 
-    def setupServer() {
-        Application.main()
-        Thread.sleep(1000)
-    }
-
-    def setup() {
-        setupServer()
-        Vertx vertx = Vertx.vertx()
-        client = vertx.createHttpClient()
-    }
-
-    def 'Should get server health'() {
+    def 'Should get application health status'() {
         def async = new AsyncConditions()
 
         when:
-        client.get(3000, 'localhost', '/health') { response ->
+        httpClient.getNow(URI) { response ->
             if (response.statusCode() == 200) {
                 async.evaluate { true }
             }
         }
-        .end()
 
         then:
-        async.await(Env.testWaitTime())
-
+        async.await Env.testWaitTime()
     }
 
 }

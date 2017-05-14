@@ -14,6 +14,10 @@ class Env {
         System.getenv().HOST ?: 'localhost'
     }
 
+    static appUrl() {
+        "http://${host()}:${port()}".toString()
+    }
+
     /**
      * App configuration
      */

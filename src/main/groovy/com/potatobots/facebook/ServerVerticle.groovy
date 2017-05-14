@@ -2,7 +2,7 @@ package com.potatobots.facebook
 
 import com.potatobots.facebook.config.Env
 import com.potatobots.facebook.health.HealthRouter
-import com.potatobots.facebook.webhooks.user.WebhookUserRouter
+import com.potatobots.facebook.webhooks.user.UserRouter
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.AsyncResult
 import io.vertx.core.Future
@@ -55,7 +55,7 @@ class ServerVerticle extends AbstractVerticle {
         router.route().handler BodyHandler.create()
 
         HealthRouter.create(router).route()
-        WebhookUserRouter.create(router).route()
+        UserRouter.create(router).route()
     }
 
 }

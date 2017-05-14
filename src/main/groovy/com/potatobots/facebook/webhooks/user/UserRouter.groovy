@@ -4,13 +4,13 @@ import com.potatobots.facebook.webhooks.user.handlers.GetHandler
 import com.potatobots.facebook.webhooks.user.handlers.PostHandler
 import io.vertx.ext.web.Router
 
-class WebhookUserRouter {
+class UserRouter {
 
     static WEBHOOK_PATH = '/webhooks/user'
 
     Router router
 
-    WebhookUserRouter(Router router) {
+    UserRouter(Router router) {
         this.router = router
     }
 
@@ -20,7 +20,7 @@ class WebhookUserRouter {
     }
 
     static create(Router router) {
-        new WebhookUserRouter(router)
+        new UserRouter(router)
     }
 
 }

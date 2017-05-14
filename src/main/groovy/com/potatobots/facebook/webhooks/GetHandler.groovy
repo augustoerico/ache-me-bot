@@ -1,8 +1,7 @@
-package com.potatobots.facebook.webhooks.user.handlers
+package com.potatobots.facebook.webhooks
 
 import com.potatobots.facebook.config.Env
 import com.potatobots.facebook.utils.QueryUrl
-import groovy.json.JsonOutput
 import io.vertx.ext.web.RoutingContext
 import org.apache.logging.log4j.LogManager
 
@@ -14,7 +13,7 @@ class GetHandler {
         LOGGER.info "[GET ] ${context.normalisedPath()}"
 
         def params = QueryUrl.verification(context)
-        def response = context.response()/*.putHeader('content-type', 'application/json')*/
+        def response = context.response()
 
         params.verifyToken == Env.facebookWebhookToken() ?
                 response.end(params.challenge as String) :

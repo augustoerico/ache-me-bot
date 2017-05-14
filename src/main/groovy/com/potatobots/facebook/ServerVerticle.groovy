@@ -2,6 +2,7 @@ package com.potatobots.facebook
 
 import com.potatobots.facebook.config.Env
 import com.potatobots.facebook.health.HealthRouter
+import com.potatobots.facebook.webhooks.group.GroupRouter
 import com.potatobots.facebook.webhooks.user.UserRouter
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.AsyncResult
@@ -42,7 +43,7 @@ class ServerVerticle extends AbstractVerticle {
     def handleResult = { Future future, AsyncResult result ->
         if (result.succeeded()) {
             LOGGER.info 'Done'
-            LOGGER.info "Server running on http://${Env.host()}:${Env.port()}"
+            LOGGER.info "Server running on ${Env.appUrl()}"
             future.complete()
         } else {
             def ex = result.cause()
@@ -56,6 +57,7 @@ class ServerVerticle extends AbstractVerticle {
 
         HealthRouter.create(router).route()
         UserRouter.create(router).route()
+        GroupRouter.create(router).route()
     }
 
 }

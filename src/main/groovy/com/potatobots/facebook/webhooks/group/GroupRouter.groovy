@@ -1,25 +1,24 @@
-package com.potatobots.facebook.webhooks.user
+package com.potatobots.facebook.webhooks.group
 
 import com.potatobots.facebook.webhooks.GetHandler
 import io.vertx.ext.web.Router
 
-class UserRouter {
+class GroupRouter {
 
-    static WEBHOOK_PATH = '/webhooks/user'
+    static final WEBHOOK_PATH = '/webhooks/group'
 
     Router router
 
-    UserRouter(Router router) {
+    GroupRouter(Router router) {
         this.router = router
     }
 
     def route() {
         router.get(WEBHOOK_PATH).handler GetHandler.handle
-        router.post(WEBHOOK_PATH).handler PostHandler.handle
     }
 
     static create(Router router) {
-        new UserRouter(router)
+        new GroupRouter(router)
     }
 
 }
